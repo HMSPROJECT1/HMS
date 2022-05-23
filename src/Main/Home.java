@@ -1,4 +1,8 @@
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /*
@@ -15,6 +19,9 @@ public class Home extends javax.swing.JFrame {
     /**
      * Creates new form Home
      */
+    PreparedStatement prp = null;
+    ResultSet result = null;
+    Connection connection = null;
     public Home() {
         initComponents();
     }
@@ -191,18 +198,101 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_ResetActionPerformed
 
     private void LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginActionPerformed
-         String user=Username.getText();
+        String user=Username.getText();
          String pass=String.valueOf(Password.getPassword());
          String option= User.getSelectedItem().toString();
          
-         if(option.equals("Admin")&&user.equals("Admin")&&pass.equals("1234")){
-             JOptionPane.showMessageDialog(null, "Login Succesful");
-             AdminPage_1 adminpage=new AdminPage_1();
-             adminpage.setVisible(true);
-             dispose();
+         
+         if(option.equals("Admin")) {
+             if( !user.isBlank()&& !pass.isBlank()){
+            try{
+             String sql = "select username, password from admin where username='" + user + "'";
+             connection = Connector.ConnectDb();
+             prp = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+             result= prp.executeQuery();
+             result.first();
+             if(pass.equals(result.getString("password"))){
+                  AdminPage adminpage=new AdminPage();
+                  adminpage.setVisible(true);
+                JOptionPane.showMessageDialog(null, "Login Succesful", "Welcome " + user, JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+                connection.close();
+             }
+             else{
+                 JOptionPane.showMessageDialog(null, "Login Failed", "Error", JOptionPane.WARNING_MESSAGE);
+                 
+             }
+            }
+            catch(SQLException E){
+                //JOptionPane.showMessageDialog(null,E);
+                JOptionPane.showMessageDialog(null, "Wrong Username or Password");
+            }
+             
          }
          else{
-             JOptionPane.showMessageDialog(null, "Login Failed");
+             JOptionPane.showMessageDialog(null, "Some Fields are Empty");
+         }
+         }
+         if(option.equals("Doctor")) {
+                 if( !user.isBlank()&& !pass.isBlank()){
+            try{
+             String sql = "select username, password from Doctor where username='" + user + "'";
+             connection = Connector.ConnectDb();
+             prp = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+             result= prp.executeQuery();
+             result.first();
+             if(pass.equals(result.getString("password"))){
+                  //DoctorPage d=new DoctorPage();
+                  //d.setVisible(true);
+                JOptionPane.showMessageDialog(null, "Login Succesful", "Welcome " + user, JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+                connection.close();
+             }
+             else{
+                 JOptionPane.showMessageDialog(null, "Login Failed", "Error", JOptionPane.WARNING_MESSAGE);
+                 
+             }
+            }
+            catch(SQLException E){
+                //JOptionPane.showMessageDialog(null,E);
+                JOptionPane.showMessageDialog(null, "Wrong Username or Password");
+            }
+             
+         }
+         else{
+             JOptionPane.showMessageDialog(null, "Some Fields are Empty");
+         }
+         }
+         
+         if(option.equals("Receptionist")) {
+                 if( !user.isBlank()&& !pass.isBlank()){
+            try{
+             String sql = "select username, password from Receptionist where username='" + user + "'";
+             connection = Connector.ConnectDb();
+             prp = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+             result= prp.executeQuery();
+             result.first();
+             if(pass.equals(result.getString("password"))){
+                  //ReceptionistPage r = new ReceptionistPage();
+                  //r.setVisible(true);
+                JOptionPane.showMessageDialog(null, "Login Succesful", "Welcome " + user, JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+                connection.close();
+             }
+             else{
+                 JOptionPane.showMessageDialog(null, "Login Failed", "Error", JOptionPane.WARNING_MESSAGE);
+                 
+             }
+            }
+            catch(SQLException E){
+                //JOptionPane.showMessageDialog(null,E);
+                JOptionPane.showMessageDialog(null, "Wrong Username or Password");
+            }
+             
+         }
+         else{
+             JOptionPane.showMessageDialog(null, "Some Fields are Empty");
+         }
          }
          
     }//GEN-LAST:event_LoginActionPerformed
